@@ -14,16 +14,12 @@ const SpinningMesh = ({ position, args, color, speed, set, html }) => {
 	const [hover, setHover] = useState(false);
 
 	const props = useSpring({
-		scale: expand ? [5, 5, 5] : hover ? [1.8, 1.8, 1.8] : [1, 1, 1],
+		scale: expand ? [7, 7, 7] : hover ? [1.8, 1.8, 1.8] : [1, 1, 1],
+		zIndex: expand ? 1000 : null,
 	});
 
 	useFrame(() => {
 		mesh.current.rotation.x = mesh.current.rotation.y += 0.01;
-	});
-
-	useEffect(() => {
-		if (expand) {
-		}
 	});
 
 	const clickHandler = () => {
@@ -66,7 +62,7 @@ const SpinningMesh = ({ position, args, color, speed, set, html }) => {
 
 function App() {
 	const colorArr = ["lightBlue", "pink", "yellow", "orange", "lightGreen"];
-	const { difficulty } = useControls({ difficulty: { value: 30, min: 0, max: 250, step: 20 } });
+	const { difficulty } = useControls({ difficulty: { value: 30, min: 0, max: 350, step: 20 } });
 	const randomVector = (r) => [r / 2 - Math.random() * r, r / 2 - Math.random() * r + r / 2, r / 2 - Math.random() * r];
 	const randomEuler = () => [Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI];
 	const randomData = Array.from({ length: difficulty }, (r = 20) => ({
@@ -76,17 +72,13 @@ function App() {
 	}));
 	const [render, setRender] = useState(false);
 
-	// useEffect(() => {
-	// 	setTimeout(() => setRender(!render), 10000);
-	// }, [render]);
-
 	return (
 		<div className="app">
 			<header>
 				<span>React Three Fiber</span>
 				<span>Find the white box</span>
 			</header>
-			<Canvas shadows colorManagement camera={{ position: [-25, 18, 15], fov: 80 }}>
+			<Canvas shadows colorManagement camera={{ position: [-25, 16, 15], fov: 90 }}>
 				<ambientLight intensity={0.3} />
 				<pointLight position={[-10, 0, -20]} intensity={0.5} />
 				<pointLight position={[0, -10, 0]} intensity={0.2} />
