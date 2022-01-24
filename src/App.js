@@ -49,7 +49,7 @@ const SpinningMesh = ({ position, args, color, speed, set, html }) => {
 			<boxBufferGeometry attach="geometry" args={args} />
 			<MeshWobbleMaterial attach="material" color={color} speed={speed} factor={0.3} />
 			{expand && (
-				<Html distanceFactor={55} className="html" as="div">
+				<Html position={0.1} distanceFactor={55} className="html" as="div">
 					<button onClick={resetHandler}>
 						<h2>{html}</h2>
 						<p>click here to reset</p>
