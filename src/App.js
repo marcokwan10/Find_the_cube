@@ -1,23 +1,44 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, softShadows, MeshWobbleMaterial } from "@react-three/drei";
+import { OrbitControls, softShadows, MeshWobbleMaterial, Html } from "@react-three/drei";
 import "./style.css";
 import { useSpring, a } from "@react-spring/three";
+import { useControls } from "leva";
 
 softShadows();
+const answer = "lightGrey";
 
-const SpinningMesh = ({ position, args, color, speed }) => {
+const SpinningMesh = ({ position, args, color, speed, set, html }) => {
 	const mesh = useRef(null);
 	const [expand, setExpand] = useState(false);
 	const [hover, setHover] = useState(false);
 
 	const props = useSpring({
-		scale: expand ? [2, 2, 2] : hover ? [1.2, 1.2, 1.2] : [1, 1, 1],
+		scale: expand ? [5, 5, 5] : hover ? [1.8, 1.8, 1.8] : [1, 1, 1],
 	});
 
 	useFrame(() => {
 		mesh.current.rotation.x = mesh.current.rotation.y += 0.01;
 	});
+
+	useEffect(() => {
+		if (expand) {
+		}
+	});
+
+	const clickHandler = () => {
+		if (color === answer) {
+			setExpand(true);
+		}
+	};
+
+	const resetHandler = () => {
+		if (expand) {
+			setExpand(false);
+			set();
+		}
+	};
+
 	return (
 		<a.mesh
 			castShadow
@@ -26,21 +47,49 @@ const SpinningMesh = ({ position, args, color, speed }) => {
 			scale={props.scale}
 			onPointerOver={() => setHover(true)}
 			onPointerOut={() => setHover(false)}
-			onClick={() => setExpand(!expand)}
+			onClick={clickHandler}
+			visibility="false"
 		>
 			<boxBufferGeometry attach="geometry" args={args} />
 			<MeshWobbleMaterial attach="material" color={color} speed={speed} factor={0.3} />
+			{expand && (
+				<Html distanceFactor={55} className="html" as="div">
+					<button onClick={resetHandler}>
+						<h2>{html}</h2>
+						<p>click here to reset</p>
+					</button>
+				</Html>
+			)}
 		</a.mesh>
 	);
 };
 
 function App() {
+	const colorArr = ["lightBlue", "pink", "yellow", "orange", "lightGreen"];
+	const { difficulty } = useControls({ difficulty: { value: 30, min: 0, max: 250, step: 20 } });
+	const randomVector = (r) => [r / 2 - Math.random() * r, r / 2 - Math.random() * r + r / 2, r / 2 - Math.random() * r];
+	const randomEuler = () => [Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI];
+	const randomData = Array.from({ length: difficulty }, (r = 20) => ({
+		color: colorArr[Math.floor(Math.random() * 5)],
+		position: randomVector(r),
+		rotation: randomEuler(),
+	}));
+	const [render, setRender] = useState(false);
+
+	// useEffect(() => {
+	// 	setTimeout(() => setRender(!render), 10000);
+	// }, [render]);
+
 	return (
 		<div className="app">
-			<Canvas shadows colorManagement camera={{ position: [-5, 6, 7], fov: 60 }}>
+			<header>
+				<span>React Three Fiber</span>
+				<span>Find the white box</span>
+			</header>
+			<Canvas shadows colorManagement camera={{ position: [-25, 18, 15], fov: 80 }}>
 				<ambientLight intensity={0.3} />
 				<pointLight position={[-10, 0, -20]} intensity={0.5} />
-				<pointLight position={[0, -10, 0]} intensity={1.5} />
+				<pointLight position={[0, -10, 0]} intensity={0.2} />
 				<directionalLight
 					castShadow
 					position={[0, 10, 0]}
@@ -58,12 +107,20 @@ function App() {
 						<planeBufferGeometry attach="geometry" args={[100, 100]} />
 						<shadowMaterial attach="material" opacity={0.3} />
 					</mesh>
-					<SpinningMesh position={[-2, 1, -5]} args={[1, 2, 1]} color="pink" speed={10} />
-					<SpinningMesh position={[0, 1, 0]} args={[3, 2, 1]} color="lightblue" speed={13} />
-					<SpinningMesh position={[5, 1, -2]} args={[1, 2, 2]} color="pink" speed={8} />
-					<SpinningMesh position={[3, 1, -7]} args={[3, 1, 2]} color="yellow" speed={8} />
+					{randomData.map((item, i) => (
+						<SpinningMesh
+							position={item.position}
+							rotation={item.rotation}
+							args={[1, 1, 1]}
+							color={i === 5 ? answer : item.color}
+							speed={13}
+							key={i}
+							set={() => setTimeout(() => setRender(!render), 1000)}
+							html={i === 5 && "YOU WON"}
+						/>
+					))}
 				</group>
-				<OrbitControls />
+				<OrbitControls autoRotate autoRotateSpeed={1} />
 			</Canvas>
 		</div>
 	);

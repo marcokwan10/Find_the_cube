@@ -7,5 +7,22 @@ body {
 .app {
 	width: 100vw;
 	height: 100vh;
-	background: #c6c6c6;
+	background: #c7c7c7;
+}
+
+header {
+	display: flex;
+	justify-content: space-between;
+	font-size: 2rem;
+	padding: 20px 350px 150px 350px;
+	font-family: "Courier New", Courier, monospace;
+}
+
+.html button {
+	font-family: "Courier New", Courier, monospace;
+	background: #202035;
+	color: white;
+	padding: 5px 15px;
+	border-radius: 20px;
+	white-space: nowrap;
 }
