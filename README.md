@@ -1,6 +1,6 @@
 # Getting Started with Create React App
 
-![gif](https://im2.ezgif.com/tmp/ezgif-2-02a720ded8.gif)
+![gif](https://media.giphy.com/media/8pNbPZotQhrBOZHJZW/giphy.gif)
 
 link: https://findcube.vercel.app/
 
