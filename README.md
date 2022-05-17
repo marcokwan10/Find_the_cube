@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# Find the cube
 
 ![gif](https://media.giphy.com/media/8pNbPZotQhrBOZHJZW/giphy.gif)
 
